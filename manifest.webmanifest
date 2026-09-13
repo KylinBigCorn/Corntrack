@@ -1,8 +1,9 @@
 {
-  "name":"LifeTrack 本地目标打卡",
-  "short_name":"LifeTrack",
+  "name":"Corntrack 本地目标打卡",
+  "short_name":"Corntrack",
   "description":"本地优先的 OKR + 每日打卡 + 趋势分析工具",
   "start_url":"./",
+  "scope":"./",
   "display":"standalone",
   "background_color":"#f7f7f5",
   "theme_color":"#f7f7f5",
