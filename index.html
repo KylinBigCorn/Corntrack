@@ -16,15 +16,10 @@
 <body>
   <div id="app" class="app-shell">
     <header class="topbar">
-      <div>
-        <div id="eyebrow" class="eyebrow">TODAY</div>
-        <h1 id="pageTitle">今天</h1>
-      </div>
+      <div><div id="eyebrow" class="eyebrow">TODAY</div><h1 id="pageTitle">今天</h1></div>
       <button id="quickAddBtn" class="icon-btn" type="button" aria-label="新建">＋</button>
     </header>
-
     <main id="view" class="view"></main>
-
     <nav class="tabbar" aria-label="主导航">
       <button class="tab active" type="button" data-tab="today"><span>◉</span><small>今天</small></button>
       <button class="tab" type="button" data-tab="calendar"><span>▦</span><small>日历</small></button>
@@ -34,154 +29,65 @@
     </nav>
   </div>
 
-  <dialog id="habitDialog" class="modal">
-    <form id="habitForm">
-      <div class="modal-header">
-        <div><div class="modal-kicker">HABIT</div><h2 id="habitDialogTitle">新建打卡任务</h2></div>
-        <button type="button" class="close-btn" data-close="habitDialog" aria-label="关闭">×</button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="habitId" />
-        <label>名称<input name="name" placeholder="例如：英语口语" required /></label>
-        <div class="grid-2">
-          <label>Emoji<input name="emoji" value="✅" maxlength="8" /></label>
-          <label>文件夹<select name="folderId" id="habitFolderSelect"></select></label>
-        </div>
-        <div class="grid-2">
-          <label>关联 Objective<select name="goalId" id="habitGoalSelect"></select></label>
-          <label>关联 KR<select name="krId" id="habitKrSelect"></select></label>
-        </div>
-        <label>记录类型
-          <select name="type" id="habitTypeSelect">
-            <option value="boolean">完成型</option>
-            <option value="duration">时长型</option>
-            <option value="quantity">数量型</option>
-            <option value="measurement">数值型</option>
-          </select>
-        </label>
-        <div class="grid-2">
-          <label>每日目标<input name="target" type="number" step="0.1" placeholder="可选" /></label>
-          <label>单位<input name="unit" placeholder="min / kg / km" /></label>
-        </div>
-        <label>计划方式
-          <select name="scheduleType">
-            <option value="anytime">当天完成即可</option>
-            <option value="recommended">推荐时间</option>
-            <option value="window">时间窗口</option>
-          </select>
-        </label>
-        <div class="grid-2">
-          <label>开始 / 推荐时间<input name="startTime" type="time" /></label>
-          <label>结束时间<input name="endTime" type="time" /></label>
-        </div>
-        <label class="toggle-row"><span><b>暂停项目</b><small>暂停后不计入当天完成率</small></span><input name="paused" type="checkbox" /></label>
-      </div>
-      <div class="modal-actions">
-        <button id="deleteHabitBtn" type="button" class="danger-btn hidden">删除</button>
-        <button type="button" class="secondary-btn" data-close="habitDialog">取消</button>
-        <button type="submit" class="primary-btn compact">保存</button>
-      </div>
-    </form>
-  </dialog>
+  <dialog id="habitDialog" class="modal"><form id="habitForm">
+    <div class="modal-header"><div><div class="modal-kicker">HABIT</div><h2 id="habitDialogTitle">新建打卡任务</h2></div><button type="button" class="close-btn" data-close="habitDialog" aria-label="关闭">×</button></div>
+    <div class="modal-body"><input type="hidden" name="habitId" />
+      <label>名称<input name="name" placeholder="例如：英语口语" required /></label>
+      <div class="grid-2"><label>Emoji<input name="emoji" value="✅" maxlength="8" /></label><label>文件夹<select name="folderId" id="habitFolderSelect"></select></label></div>
+      <label>记录类型<select name="type" id="habitTypeSelect"><option value="boolean">完成型</option><option value="count">次数型（每次打卡 +1）</option><option value="duration">时长型</option><option value="quantity">数量型</option><option value="measurement">数值型</option></select></label>
+      <div class="grid-2"><label>每日目标<input name="target" type="number" step="0.1" placeholder="可选" /></label><label>单位<input name="unit" placeholder="次 / min / kg / km" /></label></div>
+      <label>计划方式<select name="scheduleType"><option value="anytime">当天完成即可</option><option value="recommended">推荐时间</option><option value="window">时间窗口</option></select></label>
+      <div class="grid-2"><label>开始 / 推荐时间<input name="startTime" type="time" /></label><label>结束时间<input name="endTime" type="time" /></label></div>
+      <label class="toggle-row"><span><b>暂停项目</b><small>暂停后不计入当天完成率</small></span><input name="paused" type="checkbox" /></label>
+      <div class="form-help">V4 起，任务与 OKR 的绑定统一在“目标”页面设置。一个任务可以同时绑定多个 KR。</div>
+    </div>
+    <div class="modal-actions"><button id="deleteHabitBtn" type="button" class="danger-btn hidden">删除</button><button type="button" class="secondary-btn" data-close="habitDialog">取消</button><button type="submit" class="primary-btn compact">保存</button></div>
+  </form></dialog>
 
-  <dialog id="recordDialog" class="modal">
-    <form id="recordForm">
-      <div class="modal-header">
-        <div><div class="modal-kicker">RECORD</div><h2 id="recordTitle">记录打卡</h2></div>
-        <button type="button" class="close-btn" data-close="recordDialog" aria-label="关闭">×</button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="habitId" />
-        <input type="hidden" name="recordId" />
-        <div id="recordHabitMeta" class="record-meta"></div>
-        <div class="grid-2">
-          <label>日期<input name="date" type="date" required /></label>
-          <label>时间<input name="time" type="time" /></label>
-        </div>
-        <div id="dynamicRecordFields"></div>
-        <label>备注<textarea name="note" rows="3" placeholder="可选"></textarea></label>
-      </div>
-      <div class="modal-actions">
-        <button id="deleteRecordBtn" type="button" class="danger-btn hidden">删除</button>
-        <button type="button" class="secondary-btn" data-close="recordDialog">取消</button>
-        <button type="submit" class="primary-btn compact">保存</button>
-      </div>
-    </form>
-  </dialog>
+  <dialog id="recordDialog" class="modal"><form id="recordForm">
+    <div class="modal-header"><div><div class="modal-kicker">RECORD</div><h2 id="recordTitle">记录打卡</h2></div><button type="button" class="close-btn" data-close="recordDialog" aria-label="关闭">×</button></div>
+    <div class="modal-body"><input type="hidden" name="habitId" /><input type="hidden" name="recordId" /><div id="recordHabitMeta" class="record-meta"></div><div class="grid-2"><label>日期<input name="date" type="date" required /></label><label>时间<input name="time" type="time" /></label></div><div id="dynamicRecordFields"></div><label>备注<textarea name="note" rows="3" placeholder="可选"></textarea></label></div>
+    <div class="modal-actions"><button id="deleteRecordBtn" type="button" class="danger-btn hidden">删除</button><button type="button" class="secondary-btn" data-close="recordDialog">取消</button><button type="submit" class="primary-btn compact">保存</button></div>
+  </form></dialog>
 
-  <dialog id="goalDialog" class="modal">
-    <form id="goalForm">
-      <div class="modal-header">
-        <div><div class="modal-kicker">OBJECTIVE</div><h2 id="goalDialogTitle">新建 Objective</h2></div>
-        <button type="button" class="close-btn" data-close="goalDialog" aria-label="关闭">×</button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="goalId" />
-        <label>目标名称<input name="name" placeholder="例如：健身减脂" required /></label>
-        <label>Emoji<input name="emoji" value="🎯" maxlength="8" /></label>
-        <label>说明<textarea name="description" rows="3" placeholder="为什么要完成它？"></textarea></label>
-      </div>
-      <div class="modal-actions">
-        <button id="deleteGoalBtn" type="button" class="danger-btn hidden">删除</button>
-        <button type="button" class="secondary-btn" data-close="goalDialog">取消</button>
-        <button type="submit" class="primary-btn compact">保存</button>
-      </div>
-    </form>
-  </dialog>
+  <dialog id="goalDialog" class="modal"><form id="goalForm">
+    <div class="modal-header"><div><div class="modal-kicker">OBJECTIVE</div><h2 id="goalDialogTitle">新建 Objective</h2></div><button type="button" class="close-btn" data-close="goalDialog" aria-label="关闭">×</button></div>
+    <div class="modal-body"><input type="hidden" name="goalId" /><label>目标名称<input name="name" placeholder="例如：健身减脂" required /></label><label>Emoji<input name="emoji" value="🎯" maxlength="8" /></label><label>说明<textarea name="description" rows="3" placeholder="为什么要完成它？"></textarea></label></div>
+    <div class="modal-actions"><button id="deleteGoalBtn" type="button" class="danger-btn hidden">删除</button><button type="button" class="secondary-btn" data-close="goalDialog">取消</button><button type="submit" class="primary-btn compact">保存</button></div>
+  </form></dialog>
 
-  <dialog id="krDialog" class="modal">
-    <form id="krForm">
-      <div class="modal-header">
-        <div><div class="modal-kicker">KEY RESULT</div><h2 id="krDialogTitle">新建 Key Result</h2></div>
-        <button type="button" class="close-btn" data-close="krDialog" aria-label="关闭">×</button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="krId" />
-        <label>所属目标<select name="goalId" id="krGoalSelect"></select></label>
-        <label>KR 名称<input name="name" placeholder="例如：体重降到 68kg" required /></label>
-        <div class="grid-2"><label>起始值<input name="startValue" type="number" step="0.1" required /></label><label>目标值<input name="targetValue" type="number" step="0.1" required /></label></div>
-        <div class="grid-2"><label>当前值<input name="currentValue" type="number" step="0.1" required /></label><label>单位<input name="unit" placeholder="kg / h / 次" /></label></div>
-        <p class="form-help">当前值可随时修改。任务绑定到 KR 后，会显示在该 KR 下方，便于追踪“行动 → 结果”的关系。</p>
-      </div>
-      <div class="modal-actions">
-        <button id="deleteKrBtn" type="button" class="danger-btn hidden">删除</button>
-        <button type="button" class="secondary-btn" data-close="krDialog">取消</button>
-        <button type="submit" class="primary-btn compact">保存</button>
-      </div>
-    </form>
-  </dialog>
+  <dialog id="krDialog" class="modal"><form id="krForm">
+    <div class="modal-header"><div><div class="modal-kicker">KEY RESULT</div><h2 id="krDialogTitle">新建 Key Result</h2></div><button type="button" class="close-btn" data-close="krDialog" aria-label="关闭">×</button></div>
+    <div class="modal-body"><input type="hidden" name="krId" />
+      <label>所属目标<select name="goalId" id="krGoalSelect"></select></label>
+      <label>KR 名称<input name="name" placeholder="例如：每周运动至少 4 次" required /></label>
+      <div class="grid-2"><label>指标类型<select name="metricType"><option value="count">次数</option><option value="duration">时长</option><option value="quantity">数量</option><option value="measurement">数值 / 状态</option><option value="manual">手动</option></select></label><label>统计周期<select name="period"><option value="day">每日</option><option value="week">每周</option><option value="month">每月</option><option value="year">每年</option><option value="cumulative">累计</option></select></label></div>
+      <div class="grid-2"><label>起始值<input name="startValue" type="number" step="0.1" value="0" /></label><label>目标值<input name="targetValue" type="number" step="0.1" required /></label></div>
+      <div class="grid-2"><label>手动当前值<input name="currentValue" type="number" step="0.1" value="0" /></label><label>单位<input name="unit" placeholder="次 / min / kg / km" /></label></div>
+      <label>指标进度在 KR 总完成度中的权重<input name="metricWeight" type="number" min="0" max="100" step="1" value="80" /></label>
+      <p class="form-help">例如设为 80%，则 KR 总完成度 = 指标进度 × 80% + 关联任务执行进度 × 20%。任务之间的执行权重在 OKR 页面单独设置。</p>
+    </div>
+    <div class="modal-actions"><button id="deleteKrBtn" type="button" class="danger-btn hidden">删除</button><button type="button" class="secondary-btn" data-close="krDialog">取消</button><button type="submit" class="primary-btn compact">保存</button></div>
+  </form></dialog>
 
-  <dialog id="folderDialog" class="modal">
-    <form id="folderForm">
-      <div class="modal-header">
-        <div><div class="modal-kicker">FOLDER</div><h2 id="folderDialogTitle">新建文件夹</h2></div>
-        <button type="button" class="close-btn" data-close="folderDialog" aria-label="关闭">×</button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="folderId" />
-        <label>文件夹名称<input name="name" required placeholder="例如：英语学习" /></label>
-        <label>Emoji<input name="emoji" value="📁" maxlength="8" /></label>
-        <label>上级文件夹<select name="parentId" id="folderParentSelect"></select></label>
-        <p class="form-help">支持多级文件夹。例如：语言学习 → 英语学习 → 口语训练。</p>
-      </div>
-      <div class="modal-actions">
-        <button id="deleteFolderBtn" type="button" class="danger-btn hidden">删除</button>
-        <button type="button" class="secondary-btn" data-close="folderDialog">取消</button>
-        <button type="submit" class="primary-btn compact">保存</button>
-      </div>
-    </form>
+  <dialog id="folderDialog" class="modal"><form id="folderForm">
+    <div class="modal-header"><div><div class="modal-kicker">FOLDER</div><h2 id="folderDialogTitle">新建文件夹</h2></div><button type="button" class="close-btn" data-close="folderDialog" aria-label="关闭">×</button></div>
+    <div class="modal-body"><input type="hidden" name="folderId" /><label>文件夹名称<input name="name" required placeholder="例如：英语学习" /></label><label>Emoji<input name="emoji" value="📁" maxlength="8" /></label><label>上级文件夹<select name="parentId" id="folderParentSelect"></select></label><p class="form-help">支持多级文件夹。例如：语言学习 → 英语学习 → 口语训练。</p></div>
+    <div class="modal-actions"><button id="deleteFolderBtn" type="button" class="danger-btn hidden">删除</button><button type="button" class="secondary-btn" data-close="folderDialog">取消</button><button type="submit" class="primary-btn compact">保存</button></div>
+  </form></dialog>
+
+  <dialog id="weightDialog" class="modal">
+    <div class="modal-header"><div><div class="modal-kicker">WEIGHTS</div><h2 id="weightDialogTitle">权重设置</h2></div><button type="button" class="close-btn" data-close="weightDialog" aria-label="关闭">×</button></div>
+    <div id="weightDialogBody" class="modal-body"></div>
+    <div class="modal-actions"><button id="equalWeightBtn" type="button" class="secondary-btn">平均分配</button><button type="button" class="secondary-btn" data-close="weightDialog">取消</button><button id="saveWeightBtn" type="button" class="primary-btn compact">保存</button></div>
   </dialog>
 
   <dialog id="dayDialog" class="modal">
-    <div class="modal-header">
-      <div><div class="modal-kicker">HISTORY</div><h2 id="dayDialogTitle">某日记录</h2></div>
-      <button id="closeDayDialog" type="button" class="close-btn" aria-label="关闭">×</button>
-    </div>
-    <div id="dayDialogBody" class="modal-body"></div>
-    <div class="modal-actions single"><button id="doneDayDialog" type="button" class="primary-btn compact">完成</button></div>
+    <div class="modal-header"><div><div class="modal-kicker">HISTORY</div><h2 id="dayDialogTitle">某日记录</h2></div><button id="closeDayDialog" type="button" class="close-btn" aria-label="关闭">×</button></div>
+    <div id="dayDialogBody" class="modal-body"></div><div class="modal-actions single"><button id="doneDayDialog" type="button" class="primary-btn compact">完成</button></div>
   </dialog>
 
   <input id="restoreInput" type="file" accept="application/json,.json" hidden />
-  <script src="app.js"></script>
+  <script src="app-v4-1.js"></script><script src="app-v4-2a.js"></script><script src="app-v4-2b.js"></script><script src="app-v4-3a.js"></script><script src="app-v4-3b.js"></script><script src="app-v4-4.js"></script><script src="app-v4-5.js"></script>
 </body>
 </html>
