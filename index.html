@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f7f5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="LifeTrack" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>LifeTrack</title>
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <div>
+        <div id="eyebrow" class="eyebrow">TODAY</div>
+        <h1 id="pageTitle">今天</h1>
+      </div>
+      <button id="quickAddBtn" class="icon-btn" aria-label="新建">＋</button>
+    </header>
+
+    <main id="view" class="view"></main>
+
+    <nav class="tabbar" aria-label="主导航">
+      <button class="tab active" data-tab="today"><span>◉</span><small>今天</small></button>
+      <button class="tab" data-tab="calendar"><span>▦</span><small>日历</small></button>
+      <button class="tab" data-tab="goals"><span>◎</span><small>目标</small></button>
+      <button class="tab" data-tab="insights"><span>⌁</span><small>趋势</small></button>
+      <button class="tab" data-tab="data"><span>⋯</span><small>数据</small></button>
+    </nav>
+  </div>
+
+  <dialog id="habitDialog" class="sheet">
+    <form method="dialog" id="habitForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><h2>新建打卡项目</h2><button value="cancel" class="text-btn">取消</button></div>
+      <label>名称<input name="name" placeholder="例如：英语口语" required /></label>
+      <div class="grid-2">
+        <label>Emoji<input name="emoji" value="✅" maxlength="4" /></label>
+        <label>文件夹<select name="folderId" id="habitFolderSelect"></select></label>
+      </div>
+      <label>关联目标<select name="goalId" id="habitGoalSelect"></select></label>
+      <label>记录类型
+        <select name="type">
+          <option value="boolean">完成型</option>
+          <option value="duration">时长型</option>
+          <option value="quantity">数量型</option>
+          <option value="measurement">数值型</option>
+        </select>
+      </label>
+      <div class="grid-2">
+        <label>每日目标<input name="target" type="number" step="0.1" placeholder="可选" /></label>
+        <label>单位<input name="unit" placeholder="min / kg / km" /></label>
+      </div>
+      <label>计划方式
+        <select name="scheduleType">
+          <option value="anytime">当天完成即可</option>
+          <option value="recommended">推荐时间</option>
+          <option value="window">时间窗口</option>
+        </select>
+      </label>
+      <div class="grid-2">
+        <label>开始 / 推荐时间<input name="startTime" type="time" /></label>
+        <label>结束时间<input name="endTime" type="time" /></label>
+      </div>
+      <button class="primary-btn" value="default">保存项目</button>
+    </form>
+  </dialog>
+
+  <dialog id="recordDialog" class="sheet">
+    <form method="dialog" id="recordForm">
+      <input type="hidden" name="habitId" />
+      <input type="hidden" name="recordId" />
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><h2 id="recordTitle">记录打卡</h2><button value="cancel" class="text-btn">取消</button></div>
+      <div id="recordHabitMeta" class="record-meta"></div>
+      <div class="grid-2">
+        <label>日期<input name="date" type="date" required /></label>
+        <label>时间<input name="time" type="time" /></label>
+      </div>
+      <div id="dynamicRecordFields"></div>
+      <label>备注<textarea name="note" rows="3" placeholder="可选"></textarea></label>
+      <button class="primary-btn" value="default">保存记录</button>
+      <button id="deleteRecordBtn" type="button" class="danger-btn hidden">删除记录</button>
+    </form>
+  </dialog>
+
+  <dialog id="goalDialog" class="sheet">
+    <form method="dialog" id="goalForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><h2>新建 Objective</h2><button value="cancel" class="text-btn">取消</button></div>
+      <label>目标名称<input name="name" placeholder="例如：健身减脂" required /></label>
+      <label>Emoji<input name="emoji" value="🎯" maxlength="4" /></label>
+      <label>说明<textarea name="description" rows="3" placeholder="为什么要完成它？"></textarea></label>
+      <button class="primary-btn" value="default">保存目标</button>
+    </form>
+  </dialog>
+
+  <dialog id="krDialog" class="sheet">
+    <form method="dialog" id="krForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><h2>新建 Key Result</h2><button value="cancel" class="text-btn">取消</button></div>
+      <label>所属目标<select name="goalId" id="krGoalSelect"></select></label>
+      <label>KR 名称<input name="name" placeholder="例如：体重降到 68kg" required /></label>
+      <div class="grid-2"><label>起始值<input name="startValue" type="number" step="0.1" required /></label><label>目标值<input name="targetValue" type="number" step="0.1" required /></label></div>
+      <div class="grid-2"><label>当前值<input name="currentValue" type="number" step="0.1" required /></label><label>单位<input name="unit" placeholder="kg / h / 次" /></label></div>
+      <button class="primary-btn" value="default">保存 KR</button>
+    </form>
+  </dialog>
+
+  <dialog id="folderDialog" class="sheet">
+    <form method="dialog" id="folderForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><h2>新建文件夹</h2><button value="cancel" class="text-btn">取消</button></div>
+      <label>文件夹名称<input name="name" required placeholder="例如：语言学习" /></label>
+      <label>Emoji<input name="emoji" value="📁" maxlength="4" /></label>
+      <button class="primary-btn" value="default">保存文件夹</button>
+    </form>
+  </dialog>
+
+  <dialog id="dayDialog" class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header"><h2 id="dayDialogTitle">某日记录</h2><button id="closeDayDialog" class="text-btn">完成</button></div>
+    <div id="dayDialogBody"></div>
+  </dialog>
+
+  <input id="restoreInput" type="file" accept="application/json,.json" hidden />
+  <script src="app.js"></script>
+</body>
+</html>
